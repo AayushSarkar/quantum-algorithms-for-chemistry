@@ -33,7 +33,7 @@ All code in this repository is designed to help students and researchers underst
 
 ---
 
-## 📘 About Qiskit
+# 📘 About Qiskit
 
 **Qiskit** is an open-source SDK for working with quantum computers at the level of extended quantum circuits, operators, and primitives.
 
