@@ -1,213 +1,191 @@
+# Qiskit Experiment Hub
 
 
-````markdown
-# Quantum Algorithms for Chemistry using Qiskit
+::contentReference[oaicite:0]{index=0}
 
-[![License](https://img.shields.io/github/license/Qiskit/qiskit.svg?)](https://opensource.org/licenses/Apache-2.0)
-[![Current Release](https://img.shields.io/github/release/Qiskit/qiskit.svg?logo=Qiskit)](https://github.com/Qiskit/qiskit/releases)
-[![Extended Support Release](https://img.shields.io/github/v/release/Qiskit/qiskit?sort=semver&filter=1.*&logo=Qiskit&label=extended%20support)](https://github.com/Qiskit/qiskit/releases?q=tag%3A1)
-[![Downloads](https://img.shields.io/pypi/dm/qiskit.svg)](https://pypi.org/project/qiskit/)
-[![Coverage Status](https://coveralls.io/repos/github/Qiskit/qiskit/badge.svg?branch=main)](https://coveralls.io/github/Qiskit/qiskit?branch=main)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/qiskit)
-[![Minimum rustc 1.85](https://img.shields.io/badge/rustc-1.85+-blue.svg)](https://rust-lang.github.io/rfcs/2495-min-rust-version.html)
-[![Downloads](https://static.pepy.tech/badge/qiskit)](https://pepy.tech/project/qiskit)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2583252.svg)](https://doi.org/10.5281/zenodo.2583252)
 
----
+**Qiskit Experiment Hub** is a collection of small, hands-on quantum computing experiments built using **Qiskit**.  
+This repository is focused on:
 
-# 🧪 Quantum Algorithms for Chemistry
+- Running Qiskit primitives (Sampler, Estimator)
+- Testing Aer simulator locally
+- Listing IBM Quantum backends
+- Saving IBM tokens
+- Playing with basic quantum circuits
+- Trying IBM Runtime examples
 
-This repository contains experiments, example programs, and implementations of **quantum algorithms used in chemistry**, built using **Qiskit**, IBM’s open-source SDK for quantum computing.
-
-The purpose of this project is to explore:
-
-- Variational Quantum Eigensolver (VQE)  
-- Quantum Phase Estimation (QPE)  
-- Molecular Hamiltonians  
-- State preparation  
-- Sampler & Estimator primitives  
-- Hardware-ready transpilation  
-- Simulation of chemical systems (H₂, LiH, etc.)
-
-All code in this repository is designed to help students and researchers understand how Qiskit can be used for **quantum chemistry workflows**.
+This repo is ideal for students beginning with Qiskit and experimenting with real/simulated quantum systems.
 
 ---
 
-# 📘 About Qiskit
+## ⚙️ Installation
 
-**Qiskit** is an open-source SDK for working with quantum computers at the level of extended quantum circuits, operators, and primitives.
-
-It provides:
-
-- Tools to create and manipulate quantum circuits  
-- Quantum operators & information utilities  
-- Primitives: **Sampler** and **Estimator**  
-- A powerful transpiler for hardware-optimized circuits  
-
-Documentation:  
-https://quantum.cloud.ibm.com/docs/
-
----
-
-# ⚙️ Installation
-
-Install Qiskit using pip:
+Install Qiskit:
 
 ```bash
 pip install qiskit
 ````
 
-To install Qiskit from source, follow:
-[https://quantum.cloud.ibm.com/docs/guides/install-qiskit-source](https://quantum.cloud.ibm.com/docs/guides/install-qiskit-source)
+Install additional dependencies:
+
+```bash
+pip install -r requirements.txt
+```
 
 ---
 
-# ▶️ Create Your First Quantum Program
-
-A quantum program consists of:
-
-1. A quantum circuit
-2. Measurements or observables
-3. Execution using Samplers or Estimators
-
-# Example: Creating a GHZ State
+# 🧪 Example: Simple Quantum Circuit
 
 ```python
-import numpy as np
 from qiskit import QuantumCircuit
+import numpy as np
 
-# Create the quantum state |000> + i|111> / √2
 qc = QuantumCircuit(3)
-qc.h(0)             
-qc.p(np.pi / 2, 0)
+qc.h(0)
+qc.p(np.pi/2, 0)
 qc.cx(0, 1)
 qc.cx(0, 2)
+
+qc.draw()
 ```
 
 ---
 
-# 📊 Sampling with the Sampler Primitive
+# 📊 Sampling Results (Sampler)
 
 ```python
+from qiskit.primitives import StatevectorSampler
+
 qc_measured = qc.measure_all(inplace=False)
 
-from qiskit.primitives import StatevectorSampler
 sampler = StatevectorSampler()
+result = sampler.run([qc_measured], shots=1000).result()
 
-job = sampler.run([qc_measured], shots=1000)
-result = job.result()
-
-print("Counts:", result[0].data["meas"].get_counts())
+print(result[0].data["meas"].get_counts())
 ```
-
-Expected output:
-`{"000": ~500, "111": ~500}`
 
 ---
 
-# 📐 Expectation Values with Estimator
+# 📐 Expectation Value (Estimator)
 
 ```python
 from qiskit.quantum_info import SparsePauliOp
 from qiskit.primitives import StatevectorEstimator
 
-operator = SparsePauliOp.from_list([
-    ("XXY", 1), ("XYX", 1), ("YXX", 1), ("YYY", -1)
-])
-
+operator = SparsePauliOp.from_list([("ZZ", 1), ("XX", 1)])
 estimator = StatevectorEstimator()
 
-job = estimator.run([(qc, operator)], precision=1e-3)
-result = job.result()
-
-print("Expectation values:", result[0].data.evs)
+value = estimator.run([(qc, operator)]).result()
+print(value[0].data.evs)
 ```
-
-Output:
-`4`
 
 ---
 
-# ⚡ Transpiling for Hardware
+# ⚛️ Transpiling for Hardware
 
 ```python
 from qiskit import transpile
 from qiskit.transpiler import Target, CouplingMap
 
 target = Target.from_configuration(
-    basis_gates=["cz", "sx", "rz"],
-    coupling_map=CouplingMap.from_line(3),
+    basis_gates=["cx", "rz", "sx"],
+    coupling_map=CouplingMap.from_line(3)
 )
 
-qc_transpiled = transpile(qc, target=target)
+transpiled = transpile(qc, target=target)
 ```
 
 ---
 
-# 💻 Running on Real Quantum Hardware
+# 📁 Project Structure
 
-Qiskit supports many hardware providers through standardized backends:
+The structure below matches the repository:
 
-* Qiskit IBM Runtime
-* IonQ
-* Quantinuum
-* AQT
-* AWS Braket
-* Rigetti
+```plaintext
+Qiskit-Experiment-Hub/
+│
+├── .binder/                         # Binder configuration for notebooks/demos
+├── .github/                         # GitHub workflows, templates
+├── crates/                          # Rust crates (if used internally)
+├── docs/                            # Project documentation
+├── qiskit/                          # Qiskit package sources / examples
+├── releasenotes/                    # Release notes
+├── test/                            # Tests and utilities
+├── tools/                           # Helper tools/scripts
+│
+├── aer_histogram.png                # Example output image
+├── CITATION.bib                     # Citation info
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── LICENSE.txt                      # Apache 2.0 license
+├── MANIFEST.in
+├── Makefile
+├── README.md                        # (This file)
+├── requirements.txt
+├── requirements-dev.txt
+├── requirements-optional.txt
+├── pyproject.toml
+├── setup.py
+├── setup.cfg
+├── tox.ini
+│
+├── demo_more.py                     # Demo script
+├── ibm_runtime_example.py           # IBM Runtime example
+├── interactive_save_token.py        # Save IBM token interactively
+├── list_backends.py                 # List IBM Quantum backends
+├── local_sim_test.py                # Aer simulator tests
+├── save_ibm_token.py                # Save IBM token
+├── save_ibm_token_explicit.py       # Save token (explicit mode)
+├── test_qiskit.py                   # Small Qiskit test script
+│
+├── Cargo.toml, Cargo.lock           # Rust configs
+└── rust-toolchain.toml, rustfmt.toml, .clang-format, .editorconfig etc.
 
-Providers:
+```
 
-* [https://github.com/Qiskit/qiskit-ibm-runtime](https://github.com/Qiskit/qiskit-ibm-runtime)
-* [https://github.com/qiskit-community/qiskit-ionq](https://github.com/qiskit-community/qiskit-ionq)
-* [https://github.com/qiskit-community/qiskit-aqt-provider](https://github.com/qiskit-community/qiskit-aqt-provider)
-* [https://github.com/qiskit-community/qiskit-braket-provider](https://github.com/qiskit-community/qiskit-braket-provider)
-* [https://github.com/qiskit-community/qiskit-quantinuum-provider](https://github.com/qiskit-community/qiskit-quantinuum-provider)
-* [https://github.com/rigetti/qiskit-rigetti](https://github.com/rigetti/qiskit-rigetti)
+---
+
+# ▶️ How to Run
+
+List IBM Quantum backends:
+
+```bash
+python list_backends.py
+```
+
+Run the local simulator test:
+
+```bash
+python local_sim_test.py
+```
+
+Save IBM token:
+
+```bash
+python save_ibm_token.py
+```
+
+Run IBM Runtime example:
+
+```bash
+python ibm_runtime_example.py
+```
 
 ---
 
 # 🤝 Contribution
 
-Issues & contributions follow standard Qiskit community guidelines:
+Contributions are welcome.
+Please follow the guidelines in:
 
 * CONTRIBUTING.md
 * CODE_OF_CONDUCT.md
-
-Slack community: [https://qisk.it/join-slack](https://qisk.it/join-slack)
-StackOverflow tag: `qiskit`
-Quantum Computing SE tag: `qiskit`
-
----
-
-# 🧑‍🔬 Citation
-
-If you use Qiskit in research, cite using the BibTeX entry in:
-
-`CITATION.bib`
-
----
-
-# 📝 Release Notes
-
-Releases:
-[https://github.com/Qiskit/qiskit/releases](https://github.com/Qiskit/qiskit/releases)
-
-Example:
-[https://github.com/Qiskit/qiskit/releases/tag/1.2.0](https://github.com/Qiskit/qiskit/releases/tag/1.2.0)
-
-Complete release notes:
-[https://quantum.cloud.ibm.com/docs/api/qiskit/release-notes](https://quantum.cloud.ibm.com/docs/api/qiskit/release-notes)
-
----
-
-# 🙏 Acknowledgements
-
-We acknowledge partial support for Qiskit development from the DOE Office of Science
-(Co-design Center for Quantum Advantage — C2QA, Contract DE-SC0012704)
 
 ---
 
 # 📄 License
 
-This project is licensed under the **Apache License 2.0**.
-See: `LICENSE.txt`
+This project is licensed under **Apache License 2.0**.
+See `LICENSE.txt`.
+
+```
