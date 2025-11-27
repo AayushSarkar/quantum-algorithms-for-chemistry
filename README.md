@@ -15,7 +15,7 @@
 
 ---
 
-## 🧪 Quantum Algorithms for Chemistry
+# 🧪 Quantum Algorithms for Chemistry
 
 This repository contains experiments, example programs, and implementations of **quantum algorithms used in chemistry**, built using **Qiskit**, IBM’s open-source SDK for quantum computing.
 
@@ -49,7 +49,7 @@ https://quantum.cloud.ibm.com/docs/
 
 ---
 
-## ⚙️ Installation
+# ⚙️ Installation
 
 Install Qiskit using pip:
 
@@ -62,7 +62,7 @@ To install Qiskit from source, follow:
 
 ---
 
-## ▶️ Create Your First Quantum Program
+# ▶️ Create Your First Quantum Program
 
 A quantum program consists of:
 
@@ -70,7 +70,7 @@ A quantum program consists of:
 2. Measurements or observables
 3. Execution using Samplers or Estimators
 
-### Example: Creating a GHZ State
+# Example: Creating a GHZ State
 
 ```python
 import numpy as np
@@ -86,7 +86,7 @@ qc.cx(0, 2)
 
 ---
 
-## 📊 Sampling with the Sampler Primitive
+# 📊 Sampling with the Sampler Primitive
 
 ```python
 qc_measured = qc.measure_all(inplace=False)
@@ -105,7 +105,7 @@ Expected output:
 
 ---
 
-## 📐 Expectation Values with Estimator
+# 📐 Expectation Values with Estimator
 
 ```python
 from qiskit.quantum_info import SparsePauliOp
@@ -128,7 +128,7 @@ Output:
 
 ---
 
-## ⚡ Transpiling for Hardware
+# ⚡ Transpiling for Hardware
 
 ```python
 from qiskit import transpile
@@ -144,7 +144,7 @@ qc_transpiled = transpile(qc, target=target)
 
 ---
 
-## 💻 Running on Real Quantum Hardware
+# 💻 Running on Real Quantum Hardware
 
 Qiskit supports many hardware providers through standardized backends:
 
@@ -166,7 +166,7 @@ Providers:
 
 ---
 
-## 🤝 Contribution
+# 🤝 Contribution
 
 Issues & contributions follow standard Qiskit community guidelines:
 
@@ -179,7 +179,7 @@ Quantum Computing SE tag: `qiskit`
 
 ---
 
-## 🧑‍🔬 Citation
+# 🧑‍🔬 Citation
 
 If you use Qiskit in research, cite using the BibTeX entry in:
 
@@ -187,7 +187,7 @@ If you use Qiskit in research, cite using the BibTeX entry in:
 
 ---
 
-## 📝 Release Notes
+# 📝 Release Notes
 
 Releases:
 [https://github.com/Qiskit/qiskit/releases](https://github.com/Qiskit/qiskit/releases)
@@ -200,14 +200,14 @@ Complete release notes:
 
 ---
 
-## 🙏 Acknowledgements
+# 🙏 Acknowledgements
 
 We acknowledge partial support for Qiskit development from the DOE Office of Science
 (Co-design Center for Quantum Advantage — C2QA, Contract DE-SC0012704)
 
 ---
 
-## 📄 License
+# 📄 License
 
 This project is licensed under the **Apache License 2.0**.
 See: `LICENSE.txt`
