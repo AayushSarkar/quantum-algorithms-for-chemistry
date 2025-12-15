@@ -35,13 +35,13 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set up Python ${{ inputs.python-version }}
         uses: actions/setup-python@v6
         with:
           python-version: ${{ inputs.python-version }}
       - name: Cache stestr
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           key: 'stestr | "${{ runner.os }}" | "${{ inputs.python-version }}" | "${{ github.run_id }}"'
           restore-keys: |
@@ -137,7 +137,7 @@ jobs:
           popd
           cp -r /tmp/terra-tests/.stestr .
       - name: Copy and Publish images
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: ${{ failure() }}
         with:
           name: copied-images-${{ runner.name }}-tests-Python-${{ inputs.python-version }}
